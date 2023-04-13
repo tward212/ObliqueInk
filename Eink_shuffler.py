@@ -1,4 +1,3 @@
-
 import os
 import random
 from PIL import Image
@@ -42,6 +41,9 @@ button_pressed = False
 # Set the initial shuffle flag to False
 shuffle_flag = False
 
+# Set the time when the button was last pressed
+last_button_press_time = time.time()
+
 # Enter an infinite loop to continuously check the button state and update the display
 while True:
     # Get the current time
@@ -52,17 +54,22 @@ while True:
         # Set the button_pressed flag to True
         button_pressed = True
         
-        # If the shuffle_flag is True, reset the shuffle_flag and shuffle the images
-        if shuffle_flag:
-            shuffle_flag = False
-            random.shuffle(image_files)
-            current_index = 0
+        # Check if the button was just pressed
+        if current_time - last_button_press_time < next_image_press_time:
+            # If the button was pressed quickly, move to the next image
+            current_index += 1
+            if current_index >= len(image_files):
+                current_index = 0
             display_image(current_index)
+        else:
+            # If the button was pressed and held, shuffle the images
+            shuffle_flag = True
+            
     else:
         # If the button was previously pressed and is now released, determine how long it was pressed
         if button_pressed:
             button_pressed = False
-            press_duration = current_time - start_time
+            press_duration = current_time - last_button_press_time
             
             # If the press duration was longer than the shuffle_hold_time, set the shuffle_flag to True
             if press_duration > shuffle_hold_time:
@@ -76,3 +83,13 @@ while True:
         
         # Sleep for a short period of time to avoid using too much CPU
         time.sleep(next_image_press_time)
+        
+    # If the shuffle flag is True, shuffle the images and reset the current index
+    if shuffle_flag:
+        shuffle_flag = False
+        random.shuffle(image_files)
+        current_index = 0
+        display_image(current_index)
+    
+    # Update the last button press time
+    last_button_press_time = current_time
