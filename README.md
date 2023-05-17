@@ -52,6 +52,8 @@
 
     Acknowledge and give credit to any individuals or projects that have contributed to Oblique Ink.
     Provide links or references to any external resources or libraries used.
+    
+Tarot Cards: https://www.sacred-texts.com/tarot/xr/index.htm
 
 ## Contact Information
 
